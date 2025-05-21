@@ -22,7 +22,7 @@ func (s *Scanner) ScanTokens() {
 		s.scanToken()
 	}
 
-	s.Tokens = append(s.Tokens, NewToken(EOF, "", nil, s.line))
+	s.Tokens = append(s.Tokens, *NewToken(EOF, "", nil, s.line))
 }
 
 func (s *Scanner) scanToken() {
@@ -166,7 +166,7 @@ func (s *Scanner) appendToken(tokenType TokenType, literal any) {
 		text = s.Source[s.start : s.current+1]
 	}
 
-	s.Tokens = append(s.Tokens, NewToken(tokenType, text, literal, s.line))
+	s.Tokens = append(s.Tokens, *NewToken(tokenType, text, literal, s.line))
 }
 
 func (s *Scanner) match(expected rune) bool {
