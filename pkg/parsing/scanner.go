@@ -1,5 +1,9 @@
 package parsing
 
+import (
+	"unicode"
+)
+
 type Scanner struct {
 	Source  string
 	Tokens  []Token
@@ -22,7 +26,7 @@ func (s *Scanner) ScanTokens() {
 }
 
 func (s *Scanner) scanToken() {
-	switch c := s.advance(); c {
+	switch character := s.advance(); character {
 	case '(':
 		s.addToken(LEFT_PAREN)
 	case ')':
@@ -75,18 +79,44 @@ func (s *Scanner) scanToken() {
 		} else {
 			s.addToken(SLASH)
 		}
-	case '\r':
-	case '\t':
+	case '\r', '\t':
 		break
 	case '\n':
 		s.line++
 	case '"':
 		s.string()
 	default:
+		if unicode.IsDigit(character) {
+			s.number()
+		}
 		// TODO ERROR
 		break
 	}
 
+}
+
+func (s *Scanner) number() {
+	for unicode.IsDigit(s.peek()) {
+		s.advance()
+	}
+	if s.peek() == '.' && unicode.IsDigit(s.peekNext()) {
+		s.advance()
+
+		for unicode.IsDigit(s.peek()) {
+			s.advance()
+		}
+	}
+
+	// TODO check if append works
+	s.addToken(NUMBER)
+}
+
+func (s *Scanner) peekNext() rune {
+	if s.current+1 >= len(s.Source) {
+		return rune(0)
+	}
+
+	return rune(s.Source[s.current+1])
 }
 
 func (s *Scanner) string() {
@@ -128,7 +158,13 @@ func (s *Scanner) addToken(tokenType TokenType) {
 }
 
 func (s *Scanner) appendToken(tokenType TokenType, literal any) {
-	text := s.Source[s.start : s.current+1]
+	var text string
+
+	if s.current+1 >= len(s.Source) {
+		text = s.Source[s.start:s.current]
+	} else {
+		text = s.Source[s.start : s.current+1]
+	}
 
 	s.Tokens = append(s.Tokens, NewToken(tokenType, text, literal, s.line))
 }
@@ -146,8 +182,8 @@ func (s *Scanner) match(expected rune) bool {
 }
 
 func (s *Scanner) advance() rune {
-	character := rune(s.Source[s.current])
+	current_character := rune(s.Source[s.current])
 	s.current++
 
-	return character
+	return current_character
 }

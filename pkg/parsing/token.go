@@ -54,6 +54,10 @@ const (
 	EOF
 )
 
+func (token TokenType) String() string {
+	return fmt.Sprintf("%d", token)
+}
+
 type Token struct {
 	Type    TokenType
 	Lexeme  string
@@ -66,5 +70,5 @@ func NewToken(Type TokenType, Lexeme string, Literal any, Line int) Token {
 }
 
 func (t Token) String() string {
-	return fmt.Sprint("%s %s %v", t.Type, t.Lexeme, t.Literal)
+	return fmt.Sprintf("%s %s %v", t.Type, t.Lexeme, t.Literal)
 }
