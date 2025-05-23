@@ -163,7 +163,7 @@ func (s *Scanner) appendToken(tokenType TokenType, literal any) {
 	if s.current+1 >= len(s.Source) {
 		text = s.Source[s.start:s.current]
 	} else {
-		text = s.Source[s.start : s.current+1]
+		text = s.Source[s.start:s.current]
 	}
 
 	s.Tokens = append(s.Tokens, *NewToken(tokenType, text, literal, s.line))
