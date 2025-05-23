@@ -20,39 +20,111 @@ func TestNewScanner(t *testing.T) {
 }
 
 func TestScanTokens(t *testing.T) {
-	source := "int main {>=12}"
-	scanner := NewScanner(source)
-	scanner.ScanTokens()
+	t.Run("ScanTokens", func(t *testing.T) {
+		source := "int main {>=12}"
+		scanner := NewScanner(source)
+		scanner.ScanTokens()
 
-	assert.Equal(t, scanner.Tokens, []Token{{
-		Type:    LEFT_BRACE,
-		Lexeme:  "{",
-		Literal: nil,
-		Line:    1,
-	},
-		{
-			Type:    GREATER_EQUAL,
-			Lexeme:  ">=",
+		assert.Equal(t, scanner.Tokens, []Token{{
+			Type:    LEFT_BRACE,
+			Lexeme:  "{",
 			Literal: nil,
 			Line:    1,
 		},
-		{
-			Type:    NUMBER,
-			Lexeme:  "12",
-			Literal: nil,
-			Line:    1,
-		},
-		{
-			Type:    RIGHT_BRACE,
-			Lexeme:  "}",
-			Literal: nil,
-			Line:    1,
-		},
-		{
-			Type:    EOF,
-			Lexeme:  "",
-			Literal: nil,
-			Line:    1,
-		}})
+			{
+				Type:    GREATER_EQUAL,
+				Lexeme:  ">=",
+				Literal: nil,
+				Line:    1,
+			},
+			{
+				Type:    NUMBER,
+				Lexeme:  "12",
+				Literal: nil,
+				Line:    1,
+			},
+			{
+				Type:    RIGHT_BRACE,
+				Lexeme:  "}",
+				Literal: nil,
+				Line:    1,
+			},
+			{
+				Type:    EOF,
+				Lexeme:  "",
+				Literal: nil,
+				Line:    1,
+			}})
+	})
+
+	t.Run("Comment", func(t *testing.T) {
+		source := "//{}"
+
+		scanner := NewScanner(source)
+		scanner.ScanTokens()
+
+		assert.Equal(t, scanner.Tokens, []Token{
+			{
+				Type:    EOF,
+				Lexeme:  "",
+				Literal: nil,
+				Line:    1,
+			},
+		})
+
+	})
+
+	t.Run("New line", func(t *testing.T) {
+		source := "//{}\n\n"
+
+		scanner := NewScanner(source)
+		scanner.ScanTokens()
+
+		assert.Equal(t, scanner.line, 3)
+	})
+
+	t.Run("String", func(t *testing.T) {
+		source := `"test"`
+
+		scanner := NewScanner(source)
+		scanner.ScanTokens()
+
+		assert.Equal(t, scanner.Tokens, []Token{
+			{
+				Type:    STRING,
+				Lexeme:  "\"test\"",
+				Literal: "test",
+				Line:    1,
+			},
+			{
+				Type:    EOF,
+				Lexeme:  "",
+				Literal: nil,
+				Line:    1,
+			},
+		})
+	})
+
+	t.Run("Number", func(t *testing.T) {
+		source := "123"
+
+		scanner := NewScanner(source)
+		scanner.ScanTokens()
+
+		assert.Equal(t, scanner.Tokens, []Token{
+			{
+				Type:    NUMBER,
+				Lexeme:  "123",
+				Literal: nil,
+				Line:    1,
+			},
+			{
+				Type:    EOF,
+				Lexeme:  "",
+				Literal: nil,
+				Line:    1,
+			},
+		})
+	})
 
 }

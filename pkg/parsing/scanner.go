@@ -107,7 +107,6 @@ func (s *Scanner) number() {
 		}
 	}
 
-	// TODO check if append works
 	s.addToken(NUMBER)
 }
 
@@ -128,16 +127,14 @@ func (s *Scanner) string() {
 	}
 
 	if s.isAtTheEnd() {
-		// TODO ERROR unterminated string
+		// TODO error unterminated string
 		return
 	}
 
 	s.advance()
 
-	value := s.Source[s.start+1 : s.current]
+	value := s.Source[s.start+1 : s.current-1]
 
-	// TODO check if works correctly
-	// append token doesnt accept value
 	s.appendToken(STRING, value)
 }
 
