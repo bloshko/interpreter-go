@@ -7,9 +7,9 @@ import (
 
 func TestNewScanner(t *testing.T) {
 	source := "int main {}"
-	scanner := *NewScanner(source)
+	scanner := NewScanner(source)
 
-	assert.Equal(t, scanner, Scanner{
+	assert.Equal(t, scanner, &Scanner{
 		Source:  source,
 		Tokens:  nil,
 		start:   0,
@@ -21,7 +21,7 @@ func TestNewScanner(t *testing.T) {
 
 func TestScanTokens(t *testing.T) {
 	source := "int main {>=12}"
-	scanner := *NewScanner(source)
+	scanner := NewScanner(source)
 	scanner.ScanTokens()
 
 	assert.Equal(t, scanner.Tokens, []Token{{
