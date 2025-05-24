@@ -21,7 +21,7 @@ func TestNewScanner(t *testing.T) {
 
 func TestScanTokens(t *testing.T) {
 	t.Run("ScanTokens", func(t *testing.T) {
-		source := "int main {>=12}"
+		source := "{>=12}"
 		scanner := NewScanner(source)
 		scanner.ScanTokens()
 
@@ -115,6 +115,46 @@ func TestScanTokens(t *testing.T) {
 			{
 				Type:    NUMBER,
 				Lexeme:  "123",
+				Literal: nil,
+				Line:    1,
+			},
+			{
+				Type:    EOF,
+				Lexeme:  "",
+				Literal: nil,
+				Line:    1,
+			},
+		})
+	})
+
+	t.Run("Identifier", func(t *testing.T) {
+		source := "int main {}"
+
+		scanner := NewScanner(source)
+		scanner.ScanTokens()
+
+		assert.Equal(t, scanner.Tokens, []Token{
+			{
+				Type:    IDENTIFIER,
+				Lexeme:  "int",
+				Literal: nil,
+				Line:    1,
+			},
+			{
+				Type:    IDENTIFIER,
+				Lexeme:  "main",
+				Literal: nil,
+				Line:    1,
+			},
+			{
+				Type:    LEFT_BRACE,
+				Lexeme:  "{",
+				Literal: nil,
+				Line:    1,
+			},
+			{
+				Type:    RIGHT_BRACE,
+				Lexeme:  "}",
 				Literal: nil,
 				Line:    1,
 			},

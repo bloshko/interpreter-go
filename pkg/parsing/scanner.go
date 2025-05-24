@@ -88,11 +88,25 @@ func (s *Scanner) scanToken() {
 	default:
 		if unicode.IsDigit(character) {
 			s.number()
+		} else if unicode.IsLetter(character) {
+			s.identifier()
 		}
 		// TODO ERROR
 		break
 	}
 
+}
+
+func (s *Scanner) identifier() {
+	for isLetterOrNumber(s.peek()) {
+		s.advance()
+	}
+
+	s.addToken(IDENTIFIER)
+}
+
+func isLetterOrNumber(c rune) bool {
+	return unicode.IsNumber(c) || unicode.IsLetter(c)
 }
 
 func (s *Scanner) number() {
