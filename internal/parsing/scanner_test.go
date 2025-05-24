@@ -128,7 +128,7 @@ func TestScanTokens(t *testing.T) {
 	})
 
 	t.Run("Identifier", func(t *testing.T) {
-		source := "int main {}"
+		source := "int main {if}"
 
 		scanner := NewScanner(source)
 		scanner.ScanTokens()
@@ -149,6 +149,12 @@ func TestScanTokens(t *testing.T) {
 			{
 				Type:    LEFT_BRACE,
 				Lexeme:  "{",
+				Literal: nil,
+				Line:    1,
+			},
+			{
+				Type:    IF,
+				Lexeme:  "if",
 				Literal: nil,
 				Line:    1,
 			},

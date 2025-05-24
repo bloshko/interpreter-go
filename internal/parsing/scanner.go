@@ -102,7 +102,18 @@ func (s *Scanner) identifier() {
 		s.advance()
 	}
 
-	s.addToken(IDENTIFIER)
+	text := s.Source[s.start:s.current]
+	value, ok := Identifiers[Keyword(text)]
+
+	var tokenType TokenType
+
+	if !ok {
+		tokenType = IDENTIFIER
+	} else {
+		tokenType = value
+	}
+
+	s.addToken(tokenType)
 }
 
 func isLetterOrNumber(c rune) bool {
@@ -113,6 +124,7 @@ func (s *Scanner) number() {
 	for unicode.IsDigit(s.peek()) {
 		s.advance()
 	}
+
 	if s.peek() == '.' && unicode.IsDigit(s.peekNext()) {
 		s.advance()
 

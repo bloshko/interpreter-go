@@ -3,6 +3,32 @@ package parsing
 import "fmt"
 
 type TokenType int
+type Keyword string
+
+var Identifiers = map[Keyword]TokenType{
+	"and":  AND,
+	"or":   OR,
+	"else": ELSE,
+	"if":   IF,
+
+	"class": CLASS,
+	"super": SUPER,
+	"this":  THIS,
+
+	"false": FALSE,
+	"true":  TRUE,
+
+	"nil": NIL,
+
+	"print": PRINT,
+
+	"var": VAR,
+
+	"while": WHILE,
+
+	"fun":    FUN,
+	"return": RETURN,
+}
 
 const (
 	LEFT_PAREN TokenType = iota
